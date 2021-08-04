@@ -10,7 +10,7 @@ var AuthorSchema = new Schema({
 });
 
 AuthorSchema.virtual("name").get(function () {
-  return this.family_name + ", " + this.firstName;
+  return this.family_name + ", " + this.first_name;
 });
 
 AuthorSchema.virtual("lifespan").get(function () {
