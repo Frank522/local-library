@@ -1,5 +1,5 @@
-var mongoose = require("mongoose");
-const { DateTime } = require("luxon");
+var mongoose = require('mongoose');
+const { DateTime , toISODate } = require('luxon');
 
 var Schema = mongoose.Schema;
 
@@ -10,18 +10,18 @@ var AuthorSchema = new Schema({
   date_of_death: { type: Date },
 });
 
-AuthorSchema.virtual("name").get(function () {
-  return this.family_name + ", " + this.first_name;
+AuthorSchema.virtual('name').get(function () {
+  return this.family_name + ', ' + this.first_name;
 });
 
-AuthorSchema.virtual("lifespan").get(function () {
-  var lifetime_string = "";
+AuthorSchema.virtual('lifespan').get(function () {
+  var lifetime_string = '';
   if (this.date_of_birth) {
     lifetime_string = DateTime.fromJSDate(this.date_of_birth).toLocaleString(
       DateTime.DATE_MED
     );
   }
-  lifetime_string += " - ";
+  lifetime_string += ' - ';
   if (this.date_of_death) {
     lifetime_string += DateTime.fromJSDate(this.date_of_death).toLocaleString(
       DateTime.DATE_MED
@@ -30,9 +30,16 @@ AuthorSchema.virtual("lifespan").get(function () {
   return lifetime_string;
 });
 
+AuthorSchema.virtual('url').get(function () {
+  return '/catalog/author/' + this._id;
+});
 
-AuthorSchema.virtual("url").get(function () {
-  return "/catalog/author/" + this._id;
+AuthorSchema.virtual('date_of_birth_formatted').get(function () {
+  return DateTime.fromJSDate(this.date_of_birth).toISODate();
+});
+
+AuthorSchema.virtual('date_of_death_formatted').get(function () {
+  return DateTime.fromJSDate(this.date_of_death).toISODate();
 });
 
 module.exports = mongoose.model('Author', AuthorSchema);
