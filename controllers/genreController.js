@@ -58,7 +58,8 @@ exports.genre_create_get = function (req, res) {
 };
 
 // Handle Genre create on POST.
-exports.genre_create_post = function (req, res) {
+exports.genre_create_post =  [
+
   // Validate and santize the name field.
   body('name', 'Genre name required').trim().isLength({ min: 1 }).escape(),
 
@@ -102,7 +103,7 @@ exports.genre_create_post = function (req, res) {
          });
     }
   }
-}
+];
 
 // Display Genre delete form on GET.
 exports.genre_delete_get = function (req, res) {
