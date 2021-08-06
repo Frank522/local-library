@@ -133,17 +133,11 @@ exports.bookinstance_delete_get = function (req, res) {
 
 // Handle BookInstance delete on POST.
 exports.bookinstance_delete_post = function (req, res, next) {
-  console.log('delete is being posted');
-  BookInstance.findById(req.body.bookinstanceid).exec(function (err) {
+  BookInstance.findByIdAndRemove(req.body.bookinstanceid).exec(function (err) {
     if (err) {
       return next(err);
     } else {
-      BookInstance.findByIdAndRemove(req.body.bookinstanceid, function (err) {
-        if (err) {
-          return next(err);
-        }
-        res.redirect('/catalog/bookinstances/');
-      });
+      res.redirect('/catalog/bookinstances/');
     }
   });
 };
@@ -171,7 +165,7 @@ exports.bookinstance_update_get = function (req, res, next) {
       res.render('bookinstance_form', {
         title: 'Update Book Instance',
         book_list: results.book_list,
-        bookinstance: results.bookinstance,
+        bookinstance: results.book_instance,
       });
     }
   );
@@ -202,7 +196,7 @@ exports.bookinstance_update_post = [
       imprint: req.body.imprint,
       status: req.body.status,
       due_back: req.body.due_back,
-      _id:req.params.id //This is required, or a new ID will be assigned!
+      _id: req.params.id, //This is required, or a new ID will be assigned!
     });
 
     if (!errors.isEmpty()) {
@@ -223,10 +217,17 @@ exports.bookinstance_update_post = [
       return;
     } else {
       // Data from form is valid. Update the record.
-      BookInstance.findByIdAndUpdate(req.params.id, bookinstance, {}, function(err, thebookinstance) {
-        if (err) { return next(err); }
-        res.redirect(thebookinstance.url);
-      });
+      BookInstance.findByIdAndUpdate(
+        req.params.id,
+        bookinstance,
+        {},
+        function (err, thebookinstance) {
+          if (err) {
+            return next(err);
+          }
+          res.redirect(thebookinstance.url);
+        }
+      );
     }
   },
 ];
